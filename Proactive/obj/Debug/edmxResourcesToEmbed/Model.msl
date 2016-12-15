@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ProactiveDBModelStoreContainer" CdmEntityContainer="ProactiveDBEntities">
+    <EntitySetMapping Name="Cliente">
+      <EntityTypeMapping TypeName="ProactiveDBModel.Cliente">
+        <MappingFragment StoreEntitySet="Cliente">
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="numero_cuenta" ColumnName="numero_cuenta" />
+          <ScalarProperty Name="nombre_cliente" ColumnName="nombre_cliente" />
+          <ScalarProperty Name="codigo_pais" ColumnName="codigo_pais" />
+          <ScalarProperty Name="codigo_estado" ColumnName="codigo_estado" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Estado">
+      <EntityTypeMapping TypeName="ProactiveDBModel.Estado">
+        <MappingFragment StoreEntitySet="Estado">
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+          <ScalarProperty Name="codigo_pais" ColumnName="codigo_pais" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Pais">
+      <EntityTypeMapping TypeName="ProactiveDBModel.Pais">
+        <MappingFragment StoreEntitySet="Pais">
+          <ScalarProperty Name="codigo" ColumnName="codigo" />
+          <ScalarProperty Name="nombre" ColumnName="nombre" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

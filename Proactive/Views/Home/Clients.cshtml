@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "Clients";
+}
+
+@section scripts {
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/angular.js"></script>
+    <script src="~/Scripts/Clients.js"></script>
+}
+
+<div ng-app="proactiveDemo" id="body">
+    <div ng-controller="clientsCtrl">
+        
+            <h2>Listado de Clientes</h2>
+            <br />
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="search" class="form-control" placeholder="Buscar por nombre..." ng-model="searchTerm">
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" ng-model="searchCountry"
+                            ng-options="pais.Codigo as pais.Nombre for pais in paises">
+                        <option value="">--Ver todos los Países--</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-info pull-right" ng-click="add()" ng-disabled="isNew == true"><i class="glyphicon glyphicon-plus"></i> Nuevo Cliente</button> 
+                </div>              
+            </div>
+
+        <!-- CLIENTES -->
+        <table ng-cloak id="clientsTable" class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>
+                        <a class="sorter" href="#" ng-click="sortType = 'codigo'; sortReverse = !sortReverse">
+                            <span ng-show="sortType == 'codigo' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+                            <span ng-show="sortType == 'codigo' && sortReverse"  class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                            &nbsp; Código
+                        </a>
+                    </th>
+                    <th>
+                        <a class="sorter" href="#" ng-click="sortType = 'cuenta'; sortReverse = !sortReverse">
+                            <span ng-show="sortType == 'cuenta' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+                            <span ng-show="sortType == 'cuenta' && sortReverse"  class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                            &nbsp; Número de Cuenta
+                        </a>
+                    </th>
+                    <th>
+                        <a class="sorter" href="#" ng-click="sortType = 'nombre'; sortReverse = !sortReverse">
+                            <span ng-show="sortType == 'nombre' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+                            <span ng-show="sortType == 'nombre' && sortReverse"  class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                            &nbsp; Nombre Completo
+                        </a>
+                    </th>
+                    <th>
+                        <a class="sorter" href="#" ng-click="sortType = 'estado'; sortReverse = !sortReverse">
+                            <span ng-show="sortType == 'estado' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+                            <span ng-show="sortType == 'estado' && sortReverse"  class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                            &nbsp; Provincia / Estado
+                        </a>
+                    </th>
+                    <th>
+                        <a class="sorter" href="#" ng-click="sortType = 'pais'; sortReverse = !sortReverse">
+                            <span ng-show="sortType == 'pais' && !sortReverse" class="glyphicon glyphicon-sort-by-attributes"></span>
+                            <span ng-show="sortType == 'pais' && sortReverse"  class="glyphicon glyphicon-sort-by-attributes-alt"></span>
+                            &nbsp; País
+                        </a>
+                    </th>
+                    <th class="text-right"><span class="glyphicon glyphicon-wrench"></span> &nbsp; Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="cliente in clientes | orderBy:sortType:sortReverse | filter:{ Nombre: searchTerm } | filter: countryFilter ">
+                    <td>{{cliente.Codigo}}</td>
+                    <td>{{cliente.Cuenta}}</td>
+                    <td>{{cliente.Nombre}}</td>
+                    <td>{{cliente.State.Nombre}}</td>
+                    <td>{{cliente.Country.Nombre}}</td>
+                    <td class="text-right">
+                        <button class="btn btn-primary" ng-click="edit(cliente)"> <i class="glyphicon glyphicon-edit"></i> Editar</button>
+                        <button class="btn btn-danger"  ng-click="delete(cliente.Codigo)"> <i class="glyphicon glyphicon-trash"></i> Borrar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+
+        <div style="border-top: solid 2px #282828; width: 100%; height: 10px"> </div>
+
+        <!--CREAR NUEVO CLIENTE-->
+        <div class="row" ng-show="isNew">
+            <div>
+                <h2>Nuevo Cliente</h2>
+            </div>
+            <form name="addForm" novalidate>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="cuenta">* Cuenta: </label>
+                    <div class="col-sm-5">
+                        <input class="form-control req" type="number" name="cuenta" id="cuenta" ng-model="Cliente.Cuenta" required />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="nombre">* Nombre: </label>
+                    <div class="col-sm-5">
+                        <input class="form-control req" type="text" name="nombre" id="nombre" ng-model="Cliente.Nombre" required />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="pais">* País: </label>
+                    <div class="col-sm-5">
+                        <select name="pais" class="form-control req" ng-model="Cliente.Country.Codigo" required
+                                ng-options="pais.Codigo as pais.Nombre for pais in paises" ng-change="getEstados(Cliente.Country.Codigo)">
+                            <option value="">---Seleccione País---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="estado">* Estado: </label>
+                    <div class="col-sm-5">
+                        <select name="estado" class="form-control req" ng-model="Cliente.State.Codigo" required
+                                ng-options="estado.Codigo as estado.Nombre for estado in estados" ng-disabled="estados == null">
+                            <option value="">---Seleccione Estado---</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-danger" ng-click="cancel()"><i class="glyphicon glyphicon-remove"></i> Cancelar</button>
+                    <button class="btn btn-success" type="submit" ng-click="save()" ng-disabled="addForm.$invalid || addForm.$pristine"><i class="glyphicon glyphicon-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!--EDITAR CLIENTE-->
+        <div class="row" ng-show="Cliente.Codigo != '' && !isNew">
+            <div>
+                <h2>Editar Cliente</h2>
+            </div>
+            <form name="editForm" novalidate>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="codigo">* Código: </label>
+                    <div class="col-sm-5">
+                        <input class="form-control req" type="text" name="codigo" id="codigo" ng-model="Cliente.Codigo" disabled />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="cuenta">* Cuenta: </label>
+                    <div class="col-sm-5">
+                        <input class="form-control req" type="number" name="cuenta" id="cuenta" ng-model="Cliente.Cuenta" disabled />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="nombre">* Nombre: </label>
+                    <div class="col-sm-5">
+                        <input class="form-control req" type="text" name="nombre" id="nombre" ng-model="Cliente.Nombre" required />
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="pais">* País: </label>
+                    <div class="col-sm-5">
+                        <select name="pais" class="form-control req" ng-model="Cliente.Country.Codigo" required
+                                ng-options="pais.Codigo as pais.Nombre for pais in paises" ng-change="getEstados(Cliente.Country.Codigo)">
+                            <option value="">---Seleccione País---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-sm-1" for="estado">* Estado: </label>
+                    <div class="col-sm-5">
+                        <select name="estado" class="form-control req" ng-model="Cliente.State.Codigo" required
+                                ng-options="estado.Codigo as estado.Nombre for estado in estados" ng-disabled="estados == null">
+                            <option value="">---Seleccione Estado---</option>
+                        </select>
+                    </div>
+                </div>
+                <br />
+                <div>
+                    <button class="btn btn-danger" ng-click="cancel()"><i class="glyphicon glyphicon-remove"></i> Cancelar</button>
+                    <button class="btn btn-success" type="submit" ng-click="update()" ng-disabled="editForm.$invalid || editForm.$pristine"><i class="glyphicon glyphicon-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

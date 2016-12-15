@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="588e1d4362454b168dbd918366ee4e7d" Name="Diagram1">
+        <EntityTypeShape EntityType="ProactiveDBModel.Cliente" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProactiveDBModel.Estado" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProactiveDBModel.Pais" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
+        <AssociationConnector Association="ProactiveDBModel.FK_Cliente_ToEstado" ManuallyRouted="false" />
+        <AssociationConnector Association="ProactiveDBModel.FK_Cliente_ToPais" ManuallyRouted="false" />
+        <AssociationConnector Association="ProactiveDBModel.FK_Estado_ToPais" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
